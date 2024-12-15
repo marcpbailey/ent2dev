@@ -50,6 +50,8 @@ Defines a sensor entity (sensor.entity_device_map) that exposes the mapping as a
 
 Defines configuration constants like as `DOMAIN`, `PLATFORMS`, `SENSOR_ENTITY_ID`, and the `ATTRIBUTES` dictionary that specifies which device attributes to include.
 
+---
+
 ## Installation
 
 To install the `ent2dev` Home Assistant integration, follow these steps:
@@ -86,7 +88,7 @@ Restart your Home Assistant instance to load the new integration.
 ### Step 6: Verify Installation
 After restarting, navigate to the "Developer Tools" > "States" section in Home Assistant. Look for the `sensor.entity_device_map` entity to confirm the integration is active.
 
-
+---
 ## Configuration
 
 The `ATTRIBUTES` dictionary in `const.py` defines the metadata fields included in the entity-to-device map. This dictionary controls which device attributes are retrieved and allows you to specify default values for each attribute if the actual value is unavailable. It provides flexibility and centralised configuration for the integration without requiring changes to Python code.
@@ -156,3 +158,64 @@ ATTRIBUTES = {
 ## Samples
 
 The samples folder contains synthetic sensors, an input helper, and a couple of sample cards that demonstrate how to use ent2dev. If you understand HomeAssistant templating you'll find these familiar
+
+
+---
+## Uninstallation
+
+Follow these steps to completely remove the `ent2dev` custom integration from your Home Assistant setup:
+
+### 1. Remove the Integration from Home Assistant
+1. Navigate to **Settings** > **Devices & Services** in the Home Assistant UI.
+2. Locate the `ent2dev` integration in the list of configured integrations.
+3. Select the `ent2dev` integration and click **Delete** or **Remove**.
+4. Confirm the deletion when prompted.
+
+### 2. Delete the Custom Component Files
+1. Using an appropriate file manager or terminal, navigate to the directory where custom components are stored, typically:
+   ```
+   /config/custom_components/
+   ```
+2. Locate the folder named `ent2dev`.
+3. Delete the entire `ent2dev` folder.
+
+### 3. Remove Any Configuration Changes
+If you made manual changes to the Home Assistant configuration (e.g., in `configuration.yaml`), remove the following lines:
+- Any reference to disabling the recorder for `sensor.entity_device_map`:
+```yaml
+recorder:
+  exclude:
+    entities:
+      - sensor.entity_device_map
+```
+Also remove any dependent synthetic sensors and cards you will have created.
+
+
+## 4. Restart Home Assistant
+1. Restart Home Assistant to ensure all changes are applied and the integration is fully removed.
+   - You can restart Home Assistant via **Settings** > **System** > **Restart**.
+   - Alternatively, restart via terminal:
+     ```
+     ha core restart
+     ```
+
+## 5. Verify Uninstallation
+1. Confirm that the `ent2dev` integration no longer appears in the **Devices & Services** section.
+2. Check that the `sensor.entity_device_map` and any related entities or attributes no longer exist.
+
+
+## 6. Optional: Clear Historical Data
+If the integration generated significant historical data, you may want to clear it from the database:
+1. Stop the Home Assistant service.
+2. Use a database management tool (e.g., SQLite) to open the `home-assistant_v2.db` file.
+3. Search for entries related to `sensor.entity_device_map` and delete them.
+
+> **Warning:** Modifying the database directly can lead to data corruption if not done carefully. Always back up your database before making changes.
+
+
+## 7. Remove Any Backup Files
+1. If you created backup files for `ent2dev`, locate and delete those files.
+2. Check any version control repositories (e.g., Git) where the integration may still exist.
+
+
+These steps will ensure the complete removal of `ent2dev` from your Home Assistant setup.
