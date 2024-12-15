@@ -1,4 +1,4 @@
-# custom_components/ent2dev/__init__.py
+# __init__.py
 
 from __future__ import annotations
 
@@ -18,12 +18,12 @@ from .const import DOMAIN, PLATFORMS, ATTRIBUTES, SENSOR_ENTITY_ID
 LOGGER = logging.getLogger(__name__)
 
 async def async_setup(hass: HomeAssistant, config: dict):
-    """Set up the Entity Device Mapper integration."""
+    # Set up the Entity Device Mapper integration.
     # We don't set up via YAML, only config entries
     return True
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
-    """Set up Entity Device Mapper from a config entry."""
+    # Set up Entity Device Mapper from a config entry.
     LOGGER.info("Entity Device Mapper: setting up entry %s", entry.entry_id)
 
     device_reg = dr.async_get(hass)
@@ -55,14 +55,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     return True
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
-    """Unload a config entry."""
+    # Unload a config entry
     unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
     if unload_ok:
         hass.data[DOMAIN].pop(entry.entry_id)
     return unload_ok
 
 async def build_entity_map(device_reg: dr.DeviceRegistry, entity_reg: er.EntityRegistry, area_reg: ar.AreaRegistry) -> list[dict]:
-    """Build a list of dictionaries with keys: entity_id, device_id, and attributes from ATTRIBUTES."""
+    # Build a list of dictionaries with keys: entity_id, device_id, and attributes from ATTRIBUTES.
     entity_to_device_list = []
     for entity_id, entry in entity_reg.entities.items():
         device_id = entry.device_id
@@ -115,7 +115,7 @@ async def build_entity_map(device_reg: dr.DeviceRegistry, entity_reg: er.EntityR
     return entity_to_device_list
 
 async def rebuild_map_and_update_sensor(hass: HomeAssistant, entry: ConfigEntry):
-    """Rebuild the entity map and update the sensor entity."""
+    # Rebuild the entity map and update the sensor entity.
     device_reg = dr.async_get(hass)
     entity_reg = er.async_get(hass)
     area_reg = ar.async_get(hass)

@@ -1,9 +1,5 @@
 ### const.py
-
-Defines constants such as `DOMAIN`, `PLATFORMS`, `SENSOR_ENTITY_ID`, and the `ATTRIBUTES` dictionary that specifies which device attributes to include.
-
-```python
-# custom_components/ent2dev/const.py
+# Defines constants such as `DOMAIN`, `PLATFORMS`, `SENSOR_ENTITY_ID`, and the `ATTRIBUTES` dictionary that specifies which device attributes to include.
 
 DOMAIN = "ent2dev"
 PLATFORMS = ["sensor"]
@@ -27,6 +23,5 @@ ATTRIBUTES = {
     "friendly_name": "Unknown Device",
     "manufacturer": "Unknown Manufacturer",
     "model": "Unknown Model",
-    "area_id": "No Area",
     "area_name": "No Area Name",
 }
