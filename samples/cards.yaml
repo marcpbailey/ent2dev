@@ -1,0 +1,25 @@
+# Sample markdown card that renders missing_device_list 
+# with hyperlinks to the parent devices
+
+type: markdown
+title: Missing Devices
+content: >-
+  {% set devices_raw = state_attr('sensor.missing_device_list', 'devices') %}
+  {% if devices_raw is string and devices_raw.startswith('[') and devices_raw.endswith(']') %}
+    {% set devices = devices_raw | from_json %}
+    {% for device in devices %}
+      {% if device.device_id is defined %}
+[{{ device.friendly_name }}](/config/devices/device/{{ device.device_id }})
+      {% else %}
+{{ device.friendly_name }}
+      {% endif %}
+    {% endfor %}
+  {% else %}
+No missing devices detected.
+  {% endif %}
+  
+  
+# Sample tile card that displays missing_device_count
+
+type: tile
+entity: sensor.missing_device_count

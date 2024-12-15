@@ -1,0 +1,52 @@
+# This sensors.yaml file defines two sensors, a device list and a device count,
+# that use ent2dev to map entities to their parent devices.
+# In this case, we filter the devices to look for only offline and unavailable entities,
+# and filter the devices further to focus onlt on physical devices that might be down.
+# Because synthetic runtime sensors are limited to 16k for attributes,
+# and because we don't want to clog up HomeAssistant Recorder, we limit the list size.
+# It takes advantage of input_number.missing_devices_limit, if defined, otherwise defaulting to a hardcoded limit of 50.
+
+- platform: template
+  sensors:
+    missing_device_list:
+      friendly_name: "Missing Device List"
+      value_template: >-
+        Missing Device List
+      attribute_templates:
+        devices: >-
+          {% set max_devices = states('input_number.missing_devices_limit') | int(default=50) %}
+          {% set missing_entities = states 
+            | selectattr('state', 'in', ['offline', 'unavailable']) 
+            | map(attribute='entity_id') | default([]) | list %}
+          {% set device_map = state_attr('sensor.entity_device_map', 'mapping') | default([]) %}
+          {% if device_map | length == 0 %}
+            {{ [] | to_json }}
+          {% else %}
+            {% set missing_devices = device_map
+              | selectattr('entity_id', 'in', missing_entities)
+              | rejectattr('model', 'in', ['Tuya Scene', 'plugin', 'integration'])
+              | unique(attribute='device_id') 
+              | default([]) | list %}
+            {% if missing_devices | length > max_devices %}
+              {{ (missing_devices[:max_devices] + [{'entity_id': 'ent2dev_listlimit', 'friendly_name': 'more...'}]) | to_json }}
+            {% else %}
+              {{ missing_devices | to_json }}
+            {% endif %}
+          {% endif %}
+- platform: template
+  sensors:
+    missing_device_count:
+      friendly_name: "Missing Device Count"
+      value_template: >-
+        {% set devices_raw = state_attr('sensor.missing_device_list', 'devices') %}
+        {% if devices_raw is string and devices_raw.startswith('[') and devices_raw.endswith(']') %}
+          {% set devices = devices_raw | from_json %}
+          {% set filtered_devices = devices 
+            | rejectattr('entity_id', 'eq', 'ent2dev_listlimit') 
+            | rejectattr('friendly_name', 'eq', 'more...') 
+            | list %}
+          {{ filtered_devices | length }}
+        {% else %}
+          0
+        {% endif %}
+      icon_template: mdi:alert
