@@ -1,0 +1,9 @@
+{
+  "domain": "ent2dev",
+  "name": "Entity Device Mapper",
+  "version": "1.0.0",
+  "documentation": "https://github.com/marcpbailey/ent2dev",
+  "dependencies": [],
+  "codeowners": ["@marcpbailey"],
+  "requirements": []
+}
