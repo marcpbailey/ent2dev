@@ -32,3 +32,19 @@ ent2dev/
 ├── LICENSE
 └── .gitignore
 ````
+### 📄 manifest.json
+
+Provides integration metadata including name, version, and dependencies.
+
+### 📄 __init__.py
+
+Handles the setup of the integration, builds the entity-to-device mapping based on the defined attributes, and manages updates by listening to registry changes.
+
+### 📄 sensor.py
+
+Defines a sensor entity (sensor.entity_device_map) that exposes the mapping as a state attribute.
+
+### 📄 const.py
+
+Defines configuration constants like as `DOMAIN`, `PLATFORMS`, `SENSOR_ENTITY_ID`, and the `ATTRIBUTES` dictionary that specifies which device attributes to include.
+
