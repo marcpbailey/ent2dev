@@ -1,7 +1,7 @@
 # This sensors.yaml file defines two sensors, a device list and a device count,
 # that use ent2dev to map entities to their parent devices.
 # In this case, we filter the devices to look for only offline and unavailable entities,
-# and filter the devices further to focus onlt on physical devices that might be down.
+# and filter the list further to focus onlt on physical devices that might be down.
 # Because synthetic runtime sensors are limited to 16k for attributes,
 # and because we don't want to clog up HomeAssistant Recorder, we limit the list size.
 # It takes advantage of input_number.missing_devices_limit, if defined, otherwise defaulting to a hardcoded limit of 50.
@@ -34,6 +34,7 @@
               {{ limited_list }}
             {% endif %}
           {% endif %}
+          
     missing_device_count:
       friendly_name: "Missing Device Count"
       value_template: >-
