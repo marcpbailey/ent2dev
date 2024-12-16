@@ -20,19 +20,22 @@ The originating use case was to be able to generate a list of devices that are o
 ## 📁 File Structure
 ```
 ent2dev/
-├── custom_components/
-│   └── ent2dev/
-│       ├── init.py
-│       ├── const.py
-│       ├── sensor.py
-│       └── manifest.json
+├── init.py
+├── const.py
+├── sensor.py
+├── config_flow.py
 ├── samples/
 │   └── helpers.yaml
 │   └── sensors.yaml
 │   └── cards.yaml
+│   └── missing-devices-lovelace-card/
+│       └── card.yaml
+│       └── screenshots/
+│           └── preview.png
+├── hacs.json
+├── manifest.json
 ├── README.md
-├── LICENSE
-└── .gitignore
+└── LICENSE
 ```
 ### 📄 manifest.json
 
