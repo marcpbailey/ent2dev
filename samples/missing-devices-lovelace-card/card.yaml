@@ -1,0 +1,49 @@
+type: markdown
+content: >2-
+  {% set devices = state_attr('sensor.missing_device_list', 'devices') %}
+  {% set max_devices = states('input_number.missing_devices_limit') | int(default=50) %}
+  {% if devices %}
+  {% set filtered_devices = devices | rejectattr('entity_id', 'eq',
+  'ent2dev_listlimit') | list %}
+
+  ### {{ filtered_devices | length }} Missing Devices
+
+  {% set grouped_devices = filtered_devices | groupby('area_name') %}
+
+  {% for area_name, area_devices in grouped_devices if area_name %}
+
+  #### {{ area_name }}
+
+  {% for device in area_devices %}
+
+  - [{{ device.friendly_name }}](/config/devices/device/{{ device.device_id
+  }}){% if device.model %} ({{ device.model }}){% endif %}
+
+  {% endfor %}
+
+  {% endfor %}
+
+  {% set no_area_devices = filtered_devices | selectattr('area_name', 'eq', '')
+  | list %}
+
+  {% if no_area_devices %}
+
+  #### No Area
+
+  {% for device in no_area_devices %}
+
+  - [{{ device.friendly_name }}](/config/devices/device/{{ device.device_id
+  }}){% if device.model %} ({{ device.model }}){% endif %}
+
+  {% endfor %}
+
+  {% endif %}
+
+  {% if devices | length > max_devices %}
+
+  Limited to {{ max_devices }} devices. Adjust to see more.
+
+  {% endif %}
+  {% else %}
+  ### 0 Missing Devices
+  {% endif %}

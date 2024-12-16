@@ -23,5 +23,5 @@ ATTRIBUTES = {
     "friendly_name": "Unknown Device",
     "manufacturer": "Unknown Manufacturer",
     "model": "Unknown Model",
-    "area_name": "No Area Name",
+    "area_name": "",
 }

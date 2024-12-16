@@ -15,35 +15,33 @@
       attribute_templates:
         devices: >-
           {% set max_devices = states('input_number.missing_devices_limit') | int(default=50) %}
-          {% set missing_entities = states 
-            | selectattr('state', 'in', ['offline', 'unavailable']) 
+          {% set missing_entities = states
+            | selectattr('state', 'in', ['offline', 'unavailable'])
             | map(attribute='entity_id') | default([]) | list %}
           {% set device_map = state_attr('sensor.entity_device_map', 'mapping') | default([]) %}
           {% if device_map | length == 0 %}
-            {{ [] | to_json }}
+            {{ [] }}
           {% else %}
             {% set missing_devices = device_map
               | selectattr('entity_id', 'in', missing_entities)
               | rejectattr('model', 'in', ['Tuya Scene', 'plugin', 'integration'])
-              | unique(attribute='device_id') 
+              | unique(attribute='device_id')
               | default([]) | list %}
+            {% set limited_list = missing_devices[:max_devices] %}
             {% if missing_devices | length > max_devices %}
-              {{ (missing_devices[:max_devices] + [{'entity_id': 'ent2dev_listlimit', 'friendly_name': 'more...'}]) | to_json }}
+              {{ limited_list + [{'entity_id': 'ent2dev_listlimit', 'friendly_name': 'more...'}] }}
             {% else %}
-              {{ missing_devices | to_json }}
+              {{ limited_list }}
             {% endif %}
           {% endif %}
-- platform: template
-  sensors:
     missing_device_count:
       friendly_name: "Missing Device Count"
       value_template: >-
-        {% set devices_raw = state_attr('sensor.missing_device_list', 'devices') %}
-        {% if devices_raw is string and devices_raw.startswith('[') and devices_raw.endswith(']') %}
-          {% set devices = devices_raw | from_json %}
-          {% set filtered_devices = devices 
-            | rejectattr('entity_id', 'eq', 'ent2dev_listlimit') 
-            | rejectattr('friendly_name', 'eq', 'more...') 
+        {% set devices = state_attr('sensor.missing_device_list', 'devices') %}
+        {% if devices | length > 0 %}
+          {% set filtered_devices = devices
+            | rejectattr('entity_id', 'eq', 'ent2dev_listlimit')
+            | rejectattr('friendly_name', 'eq', 'more...')
             | list %}
           {{ filtered_devices | length }}
         {% else %}
